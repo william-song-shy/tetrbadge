@@ -30,7 +30,7 @@ def main():
     if rating == -1:
         win = r["data"]["user"]["league"]["gameswon"]
         play = r["data"]["user"]["league"]["gamesplayed"]
-        rating = win + '/' + play
+        rating = f'{win}/{play}'
 
     if rank == "z":
         color = "-808080"
