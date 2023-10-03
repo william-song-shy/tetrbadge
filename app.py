@@ -77,3 +77,40 @@ def main():
     url = f'https://img.shields.io/badge/{user}-{rank} {rating}{color}.svg{appendix}'
     # print(url)
     return redirect(url)
+
+
+@app.route("/40l")
+def fl():
+    user = request.args.get('user')
+    style = request.args.get('style', default='for-the-badge')
+    st = request.args.get('st')
+
+    if st == 'f1':
+        style = 'flat'
+    if st == 'f2':
+        style = 'flat-square'
+
+    url = f'https://ch.tetr.io/api/users/{user}/records'
+    r = requests.get(url).json()
+
+    appendix = f'?longCache=true&style={style}&logo=data:image/png;base64,' \
+               'iVBORw0KGgoAAAANSUhEUgAAAQAAAAEABAMAAACuXLVVAAAALVBMVEVHcEwAAAAAAAAFBQUbVXofaJZ9VtCNL37JRJ+lOYQVkZ1+X' \
+               '+PAQKrfTqovUaqjn7QgAAAACnRSTlMAIBEwc7rMdcFvX68ANQAAAeNJREFUeNrt3b1Nw0AYxnErG9i3gHMbWIQJCA0tsAIzUKRGNGwAC7ACPRUDhIKOmhkQBsUBvVzuzmfuwvt/HLnKxy/vk5OiKPJVLyNTjQ0AAAAA7D+gjT7SAGxssgOs+glQARVQQSpAPY84UlZQx6RJOYFYgO4JWCooYQIpAaauu5BT4go65RUcBCb5KogGtOoBVEAF+SbQFVbBtZQb6aXW4l3FV1ksPbLo0yNmn1+Ue1z/BHcS4Nn/bZ7ce2cLMFcPoAIAfAYAAAAAAAAAAAAAAAAAAAAAAABKAlxKP8peXUg5l3Im/TR7HABYPQl5fJDyJuVUGsshAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE0A+U+t4v9fpwGIeR2uwLB9RaYsgKYEgFU9AUsF6leBpQImQAVUQAVUQAVUQAVUQAVUQAVUQAVU8J8qWHrnaBrA6IvlZgO06gFUQAVUIFZgvjY4uPUHBG+eYHZMYHJAXQrAqp9AYkDncdtseeKowEQAzGbxuNMN9yu7go9ZrfZzFRjnefcE7FhA4zz/tqHSFmBIAGD0xmrZAK4JtLkBVGCpQMUqKGsCs+r7EQD4+VD/w5UAQDVJAAAAAOAPAe84sSSYxpxAFAAAAABJRU5ErkJggg=='
+
+    if not r.get('success'):
+        return redirect(f'https://img.shields.io/badge/{user}-User does not exist-lightgrey.svg{appendix}')
+
+    r = r.get('data').get('records').get('40l')
+    if r.get('record') is None:
+        return redirect(f'https://img.shields.io/badge/{user}-No record-lightgrey.svg{appendix}')
+
+    tim = r.get('record').get('endcontext').get('finalTime')
+    tim = int(tim)
+    tim = tim / 1000
+    tim = round(tim, 3)
+    minut = int(tim / 60)
+    res = f'{minut}:{tim - minut * 60}'
+
+    url = f'https://img.shields.io/badge/{user}-40L PB：{res}-blue.svg{appendix}'
+    return redirect(url)
+
