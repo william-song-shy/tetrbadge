@@ -72,6 +72,7 @@ def main():
     else:
         color = "-black"
     rank = rank.upper()
+    rank = rank.replace('-', '--')
 
     url = f'https://img.shields.io/badge/{user}-{rank} {rating}{color}.svg{appendix}'
     # print(url)
